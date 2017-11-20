@@ -97,7 +97,7 @@ def suggest_match(players = p, team_size = 3):
 
 			ts_pred.append((ts.quality([t1_ts, t2_ts]), t1_n, t2_n))
 
-	return (min(elo_pred), max(elo_pred))
+	return (min(elo_pred), max(ts_pred))
 
 
 def print_ladders():
