@@ -11,7 +11,7 @@ s.eval_match(['Krystof', 'Vanan', 'Vojta2'], ['Klizka', 'Panek', 'Marek'], 10, 5
 s.print_ladders()
 print()
 
-elo_sug, ts_sug = s.suggest_match(['Vojta1', 'Vojta2', 'Vanan', 'Vdolek', 'Marta', 'Krystof'])
+elo_sug, ts_sug = s.suggest_match()
 
-print("Elo suggestion: {} vs {}".format(elo_sug[0], elo_sug[1]))
-print("Trueskill suggestion: {} vs {}".format(ts_sug[0], ts_sug[1]))
+print("Elo suggestion: {} vs {}, {}".format(elo_sug[1], elo_sug[2], elo_sug[0]))
+print("Trueskill suggestion: {} vs {}, {}".format(ts_sug[1], ts_sug[2], ts_sug[0]))

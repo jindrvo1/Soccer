@@ -2,6 +2,7 @@ from EloForTeams import EloForTeams
 from collections import OrderedDict
 import itertools
 import trueskill as ts
+from math import ceil
 
 elo = EloForTeams()
 p = {}
@@ -69,8 +70,8 @@ def eval_match(team1, team2, score1, score2):
 	for player in team2:
 		p[player].add_rating(TRUESKILL_MODEL, t2_new.pop(0))
 
-def suggest_match(players):
-	teams = itertools.combinations(players, 3)
+def suggest_match(players = p, team_size = 3):
+	teams = itertools.combinations(players, team_size)
 
 	for player in players:
 		if player not in p:
@@ -81,24 +82,22 @@ def suggest_match(players):
 
 	for team in teams:
 		t1_n = list(team)
-		t2_n = [x for x in players if x not in team]
+		t2_n_comb = [x for x in players if x not in team]
 
-		t1_elo = [p[x].last_rating(ELO_MODEL) for x in team]
-		t2_elo = [p[x].last_rating(ELO_MODEL) for x in players if x not in team]
+		for t2_n in itertools.combinations(t2_n_comb, team_size):
+			t2_n = list(t2_n)
+			t1_elo = [p[x].last_rating(ELO_MODEL) for x in team]
+			t2_elo = [p[x].last_rating(ELO_MODEL) for x in players if x not in team]
 
-		t1_ts = [p[x].last_rating(TRUESKILL_MODEL) for x in team]
-		t2_ts = [p[x].last_rating(TRUESKILL_MODEL) for x in players if x not in team]
+			t1_ts = [p[x].last_rating(TRUESKILL_MODEL) for x in team]
+			t2_ts = [p[x].last_rating(TRUESKILL_MODEL) for x in players if x not in team]
 
-		t1_p, t2_p = elo.predict_winner(t1_elo, t2_elo)
-		elo_pred.append((abs(t1_p - t2_p), t1_n, t2_n))
+			t1_p, t2_p = elo.predict_winner(t1_elo, t2_elo)
+			elo_pred.append((abs(t1_p - t2_p), t1_n, t2_n))
 
-		ts_pred.append((ts.quality([t1_ts, t2_ts]), t1_n, t2_n))
+			ts_pred.append((ts.quality([t1_ts, t2_ts]), t1_n, t2_n))
 
-	
-	elo_suggestion = (min(elo_pred)[1], min(elo_pred)[2])
-	ts_suggestion = (max(ts_pred)[1], max(ts_pred)[2])
-
-	return (elo_suggestion, ts_suggestion)
+	return (min(elo_pred), max(elo_pred))
 
 
 def print_ladders():
