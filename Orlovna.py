@@ -13,5 +13,5 @@ print()
 
 elo_sug, ts_sug = s.suggest_match()
 
-print("Elo suggestion: {} vs {}, {}".format(elo_sug[1], elo_sug[2], elo_sug[0]))
-print("Trueskill suggestion: {} vs {}, {:.1%}".format(ts_sug[1], ts_sug[2], ts_sug[0]))
+print("Elo suggestion: {} vs {}".format(elo_sug[1], elo_sug[2]))
+print("Trueskill suggestion: {} vs {}".format(ts_sug[1], ts_sug[2]))

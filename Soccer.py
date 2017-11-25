@@ -9,9 +9,10 @@ p = {}
 
 ELO_MODEL = "elo"
 TRUESKILL_MODEL = "trueskill"
+ELO_DEFAULT_RATING = 1200
 
 class Player(object):
-	def __init__(self, name, elo = 1200, trueskill = ts.Rating()):
+	def __init__(self, name, elo = ELO_DEFAULT_RATING, trueskill = ts.Rating()):
 		self.name = name
 		self.ratings = {ELO_MODEL: [elo], TRUESKILL_MODEL: [trueskill]}
 
@@ -98,6 +99,30 @@ def suggest_match(players = p, team_size = 3):
 			ts_pred.append((ts.quality([t1_ts, t2_ts]), t1_n, t2_n))
 
 	return (min(elo_pred), max(ts_pred))
+
+def match_quality(team1, team2):
+	t1_elo, t2_elo, t1_ts, t2_ts = [], [], [], []
+	for player in team1:
+		if player not in p:
+			t1_elo.append(ELO_DEFAULT_RATING)
+			t1_ts.append(Raint())
+		else:
+			t1_elo.append(p[player].last_rating(ELO_MODEL))
+			t1_ts.append(p[player].last_rating(TRUESKILL_MODEL))
+
+	for player in team2:
+		if player not in p:
+			t2_elo.append(ELO_DEFAULT_RATING)
+			t2_ts.append(Rating())
+		else:
+			t2_elo.append(p[player].last_rating(ELO_MODEL))
+			t2_ts.append(p[player].last_rating(TRUESKILL_MODEL))
+
+	elo_pred = elo.predict_winner(t1_elo, t2_elo)
+	elo_quality = 1-abs(elo_pred[0]-elo_pred[1])
+	ts_quality = ts.quality([t1_ts, t2_ts])
+
+	return (elo_quality, ts_quality)
 
 
 def print_ladders():
