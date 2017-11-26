@@ -20,3 +20,7 @@ elo_sug, ts_sug = s.suggest_match()
 
 print("Elo suggestion: {} vs {}".format(elo_sug[1], elo_sug[2]))
 print("Trueskill suggestion: {} vs {}".format(ts_sug[1], ts_sug[2]))
+print()
+
+elo, ts = s.get_player('Vojta2')
+print(elo)

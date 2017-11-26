@@ -124,6 +124,9 @@ def match_quality(team1, team2):
 
 	return (elo_quality, ts_quality)
 
+def get_player(player):
+	if player in p:
+		return (p[player].ratings[ELO_MODEL], p[player].ratings[TRUESKILL_MODEL])
 
 def print_ladders():
 	# Elo ladder
