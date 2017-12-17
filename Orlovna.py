@@ -12,10 +12,13 @@ s.eval_match(['Krystof', 'Vanan', 'Vojta2'], ['Klizka', 'Panek', 'Marek'], 10, 5
 
 s.eval_match(['Krystof', '-_-', 'Marta'], ['Vojta2', 'Vojta1', 'Vdolek'], 11, 9)
 s.eval_match(['Krystof', '-_-', 'Vdolek'], ['Vojta2', 'Vojta1', 'Marta'], 9, 11)
-	
+
+s.eval_match(['Vojta2', 'Roman', 'Filip'], ['Vanan', 'Panek', 'Marta'], 10, 6)
+s.eval_match(['Vojta2', 'Marta', 'Filip'], ['Vanan', 'Panek', 'Roman'], 3, 9)
+
 s.print_ladders()
 print()
-
+"""
 elo_sug, ts_sug = s.suggest_match()
 
 print("Elo suggestion: {} vs {}".format(elo_sug[1], elo_sug[2]))
@@ -24,3 +27,4 @@ print()
 
 elo, ts = s.get_player('Vojta2')
 print(elo)
+"""
