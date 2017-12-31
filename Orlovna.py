@@ -19,6 +19,9 @@ s.eval_match(['Vojta2', 'Marta', 'Filip'], ['Vanan', 'Panek', 'Roman'], 3, 9)
 s.eval_match(['Vojta2', 'Roman', 'Marta'], ['Vanan', 'Filip', 'Krystof'], 10, 7)
 s.eval_match(['Vojta2', 'Roman', 'Filip'], ['Vanan', 'Marta', 'Krystof'], 2, 10)
 
+s.eval_match(['Filip', 'Roman', 'Marta'], ['Vanan', 'Vojta2', 'Krystof'], 6, 10)
+s.eval_match(['Vojta2', 'Roman', 'Marta'], ['Vanan', 'Filip', 'Krystof'], 3, 3)
+
 s.print_ladders()
 print()
 """
