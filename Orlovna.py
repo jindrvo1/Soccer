@@ -22,6 +22,10 @@ s.eval_match(['Vojta2', 'Roman', 'Filip'], ['Vanan', 'Marta', 'Krystof'], 2, 10)
 s.eval_match(['Filip', 'Roman', 'Marta'], ['Vanan', 'Vojta2', 'Krystof'], 6, 10)
 s.eval_match(['Vojta2', 'Roman', 'Marta'], ['Vanan', 'Filip', 'Krystof'], 3, 3)
 
+s.eval_match(['Michal', 'Vanan', 'Vojta2'], ['Filip', 'Vojta1', 'Marta'], 10, 4)
+s.eval_match(['Vojta2', 'Vojta1', 'Marta'], ['Michal', 'Filip', 'Vanan'], 3, 8)
+
+
 s.print_ladders()
 print()
 """
@@ -32,5 +36,6 @@ print("Trueskill suggestion: {} vs {}".format(ts_sug[1], ts_sug[2]))
 print()
 
 elo, ts = s.get_player('Vojta2')
-print(elo)
+for e in elo:
+	print(e)
 """
