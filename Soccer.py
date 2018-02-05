@@ -15,12 +15,25 @@ class Player(object):
 	def __init__(self, name, elo = ELO_DEFAULT_RATING, trueskill = ts.Rating()):
 		self.name = name
 		self.ratings = {ELO_MODEL: [elo], TRUESKILL_MODEL: [trueskill]}
+		self.games = {'won': 0, 'lost': 0, 'total': 0}
 
 	def last_rating(self, model):
 		return self.ratings[model][-1]
 
 	def add_rating(self, model, rating):
 		self.ratings[model].append(rating)
+
+	def add_victory(self):
+		self.games['won'] += 1
+		self.games['total'] += 1
+
+	def add_game(self, score):
+		if score == 1:
+			self.games['won'] += 1
+		elif score == 0:
+			self.games['lost'] +=1
+
+		self.games['total'] += 1
 
 def eval_match(team1, team2, score1, score2):
 	# Update players in dictionary
@@ -38,6 +51,12 @@ def eval_match(team1, team2, score1, score2):
 		s = 1
 	elif score1 < score2:
 		s = 0
+
+	# game counter
+	for player in team1:
+		p[player].add_game(s)
+	for player in team2:
+		p[player].add_game(1-s)
 
 	t1 = [p[x].last_rating(ELO_MODEL) for x in team1]
 	t2 = [p[x].last_rating(ELO_MODEL) for x in team2]
@@ -151,3 +170,14 @@ def print_ladders():
 	print("------------------------")
 	for name, rating in ts_ladder.items():
 			print("{}: {} (mu = {}, sigma = {})".format(name, rating['cse'], rating['mu'], rating['sigma']))
+
+def get_games(player = None):
+	games = {}
+
+	if player is None:
+		for player in p:
+			games[player] = p[player].games
+	else:
+		games = p[player].games
+
+	return games

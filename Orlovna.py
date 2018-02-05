@@ -43,3 +43,5 @@ print()
 elo, ts = s.get_player('Vojta2')
 print(elo)
 """
+
+print(s.get_games())
