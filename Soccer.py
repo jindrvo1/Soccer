@@ -4,11 +4,13 @@ import itertools
 import trueskill as ts
 import csv
 import sys
-from math import ceil
+from math import ceil, log
+from scipy.optimize import minimize
 
 elo = EloForTeams()
 p = {}
 m = 0
+matches = []
 
 ELO_MODEL = "elo"
 TRUESKILL_MODEL = "trueskill"
@@ -55,6 +57,9 @@ def eval_match(team1, team2, score1, score2):
 		s = 1
 	elif score1 < score2:
 		s = 0
+
+	global matches
+	matches.append((team1, team2, s))
 
 	# game counter
 	for player in team1:
@@ -147,6 +152,39 @@ def match_quality(team1, team2):
 
 	return (elo_quality, ts_quality)
 
+# function to minimize in the maximum-likelihood estimation
+def log_likelihood(scores, matches):
+	ll = 0
+
+	for match in matches:
+		numerator = sum([scores[x] if match[0][x] == 1 else 0 for x in range(len(scores))])
+		denumerator = sum([scores[x] if (match[0][x] == 1 or match[1][x] == 1) else 0 for x in range(len(scores))])
+		ll += match[2]*log(numerator/denumerator) + (1-match[2])*log(1-numerator/denumerator)
+
+	ll /= -len(matches)
+
+	return ll
+
+def mle():
+	m = []
+
+	for match in matches:
+		t1 = [1 if player in match[0] else 0 for player in p.keys()]
+		t2 = [1 if player in match[1] else 0 for player in p.keys()]
+		m.append((t1, t2, match[2]))
+
+	init = [0.5 for player in p.keys()]
+	bounds = [(0.001, 0.999) for player in p.keys()]
+
+	res = minimize(log_likelihood, init, args=(m,), bounds=bounds)
+
+	res_list = list(res.x)
+	ratings = {}
+	for id, player in p.items():
+		ratings[id] = res_list.pop(0)
+	
+	return ratings
+
 def get_player(player):
 	if player in p:
 		return (p[player].ratings[ELO_MODEL], p[player].ratings[TRUESKILL_MODEL])
@@ -156,9 +194,9 @@ def print_ladders():
 	elo_ladder_tmp = {k: v.last_rating(ELO_MODEL) for (k, v) in p.items()}
 	elo_ladder = OrderedDict(reversed(sorted(elo_ladder_tmp.items(), key=lambda x:x[1])))
 
-	print("------------------------")
-	print("------ ELO ladder ------")
-	print("------------------------")
+	print("-----------------------------------")
+	print("----------- ELO ladder ------------")
+	print("-----------------------------------")
 	for name, rating in elo_ladder.items():
 			print('{}: {}'.format(name, rating))
 
@@ -169,11 +207,21 @@ def print_ladders():
 					for (k, v) in p.items()}
 	ts_ladder = OrderedDict(reversed(sorted(ts_ladder_tmp.items(), key=lambda x:x[1]['cse'])))
 
-	print("------------------------")
-	print("--- Trueskill ladder ---")
-	print("------------------------")
+	print("-------------------------------------")
+	print("--------- Trueskill ladder ----------")
+	print("-------------------------------------")
 	for name, rating in ts_ladder.items():
 			print("{}: {} (mu = {}, sigma = {})".format(name, rating['cse'], rating['mu'], rating['sigma']))
+
+	# MLE ladder
+	mle_ladder_tmp = mle()
+	mle_ladder = OrderedDict(reversed(sorted(mle_ladder_tmp.items(), key=lambda x:x[1])))
+
+	print("-------------------------------------")
+	print("--- Maximum-likelihood estimation ---")
+	print("-------------------------------------")
+	for name, rating in mle_ladder.items():
+		print("{}: {}".format(name, rating))
 
 def get_games(player = None):
 	games = {}
