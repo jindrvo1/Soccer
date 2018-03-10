@@ -189,6 +189,59 @@ def get_player(player):
 	if player in p:
 		return (p[player].ratings[ELO_MODEL], p[player].ratings[TRUESKILL_MODEL])
 
+def print_streaks():
+	lws_p, lws_l = longest_winning_streak()
+	lls_p, lls_l = longest_losing_streak()
+
+	if (len(lws_p) > 1):
+		print("Longest winning streak are currently holding {} with {} won games in a row!".format(''.join(x+' and ' if i != len(lws_p)-1 else x for i, x in enumerate(lws_l)), lws_l))
+	else:
+		print("Longest winning streak is currently holding {} with {} won games in a row!".format(''.join(lws_p), lws_l))
+
+	if len(lls_p) > 1:
+		print("Longest losing streak are currently holding {} with {} lost games in a row! Suckers!".format(''.join(x+' and ' if i != len(lls_p)-1 else x for i, x in enumerate(lls_p)), lls_l))
+	else:
+		print("Longest losing streak is currently holding {} with {} lost games in a row! Sucker!".format(''.join(lls_p), lls_l))
+
+def longest_losing_streak():
+	len_max = 0
+	p_max = []
+	for name, player in p.items():
+		len = 0
+		ratings = list(player.ratings[ELO_MODEL].values())[::-1]
+		for i, r in enumerate(ratings):
+			if ratings[i] < ratings[i+1]:
+				len += 1
+			else:
+				break
+		if len >= len_max:
+			if len > len_max:
+				p_max = []
+			len_max = len
+			p_max.append(name)
+
+	return (p_max, len_max)
+
+def longest_winning_streak():
+	len_max = 0
+	p_max = []
+	for name, player in p.items():
+		len = 0
+		ratings = list(player.ratings[ELO_MODEL].values())[::-1]
+		for i, r in enumerate(ratings):
+			if ratings[i] > ratings[i+1]:
+				len += 1
+			else:
+				break
+		if len >= len_max:
+			if len > len_max:
+				p_max = []
+			len_max = len
+			p_max.append(name)
+
+	return (p_max, len_max)
+
+
 def print_ladders():
 	# Elo ladder
 	elo_ladder_tmp = {k: v.last_rating(ELO_MODEL) for (k, v) in p.items()}
