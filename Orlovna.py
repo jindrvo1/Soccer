@@ -35,6 +35,9 @@ s.eval_match(['Vojta2', 'Krystof', 'Vdolek'], ['Marek', 'Filip', 'Marta'], 10, 2
 s.eval_match(['Marta', 'Filip', 'Vojta2'], ['Vdolek', 'Krystof', 'Marek'], 10, 5)
 s.eval_match(['Marek', 'Filip', 'Vojta2'], ['Krystof', 'Vdolek', 'Marta'], 10, 8)
 
+s.eval_match(['Krystof', 'Vojta1', 'Vojta2'], ['Vanan', 'Filip', 'Skleny'], 2, 10)
+s.eval_match(['Skleny', 'Vojta1', 'Vojta2'], ['Vanan', 'Filip', 'Krystof'], 7, 10)
+
 s.export_games('Games.csv')
 s.export_results('Results.txt')
 s.export_ratings('Ratings.csv')
