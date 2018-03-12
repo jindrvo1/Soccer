@@ -202,6 +202,7 @@ def print_streaks():
 		print("Longest losing streak are currently holding {} with {} lost games in a row! Suckers!".format(''.join(x+' and ' if i != len(lls_p)-1 else x for i, x in enumerate(lls_p)), lls_l))
 	else:
 		print("Longest losing streak is currently holding {} with {} lost games in a row! Sucker!".format(''.join(lls_p), lls_l))
+	print()
 
 def longest_losing_streak():
 	len_max = 0
@@ -241,6 +242,40 @@ def longest_winning_streak():
 
 	return (p_max, len_max)
 
+# Chance of a player winning a game with both teams random
+def predictions(player=None):
+	all_players = list(p.keys())
+	players = [player] if player is not None else all_players
+
+	predictions = {}
+	for player in players:
+		opposing_all = list(all_players)
+		opposing_all.remove(player)
+		teams = itertools.combinations(opposing_all, 2)
+		predictions_player = []
+		for team in teams:
+			team1 = list(team)
+			opposing = list(opposing_all)
+			for pl in team1:
+				opposing.remove(pl)
+			team1.append(player)
+
+			team2_all = itertools.combinations(opposing, 3)
+			for team2 in team2_all:
+				p1,p2 = elo.predict_winner([p[x].last_rating(ELO_MODEL) for x in team1], [p[x].last_rating(ELO_MODEL) for x in list(team2)])
+				predictions_player.append(p1)
+		predictions[player] = sum(predictions_player)/len(predictions_player)
+
+	return predictions
+
+def print_predictions(player=None):
+	ret = predictions(player)
+	preds = OrderedDict(reversed(sorted(ret.items(), key=lambda x:x[1])))
+
+	print("Players' chance of winning a game with both teams chosen randomly:")
+	for player, prediction in preds.items():
+		print("{}: {}".format(player, prediction))
+	print()
 
 def print_ladders():
 	# Elo ladder

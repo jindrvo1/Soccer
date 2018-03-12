@@ -43,3 +43,5 @@ s.export_results('Results.txt')
 s.export_ratings('Ratings.csv')
 
 s.print_streaks()
+
+s.print_predictions()
