@@ -155,11 +155,12 @@ def match_quality(team1, team2):
 # function to minimize in the maximum-likelihood estimation
 def log_likelihood(scores, matches):
 	ll = 0
+	C = 0.01
 
 	for match in matches:
 		numerator = sum([scores[x] if match[0][x] == 1 else 0 for x in range(len(scores))])
-		denumerator = sum([scores[x] if (match[0][x] == 1 or match[1][x] == 1) else 0 for x in range(len(scores))])
-		ll += match[2]*log(numerator/denumerator) + (1-match[2])*log(1-numerator/denumerator)
+		denominator = sum([scores[x] if (match[0][x] == 1 or match[1][x] == 1) else 0 for x in range(len(scores))])
+		ll += match[2]*log(numerator/denominator) + (1-match[2])*log(1-numerator/denominator) + C*(numerator/denominator)**2
 
 	ll /= -len(matches)
 
@@ -299,7 +300,7 @@ def print_ladders():
 	print("--------- Trueskill ladder ----------")
 	print("-------------------------------------")
 	for name, rating in ts_ladder.items():
-			print("{}: {} (mu = {}, sigma = {})".format(name, rating['cse'], rating['mu'], rating['sigma']))
+			print("{}: {} (mu = {}, sigma = {})".format(name, round(rating['cse'], 2), round(rating['mu'], 2), round(rating['sigma'], 2)))
 
 	# MLE ladder
 	mle_ladder_tmp = mle()
