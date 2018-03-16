@@ -287,7 +287,7 @@ def print_ladders():
 	print("----------- ELO ladder ------------")
 	print("-----------------------------------")
 	for name, rating in elo_ladder.items():
-			print('{}: {}'.format(name, rating))
+			print('{}: {}'.format(name, round(rating, 2)))
 
 	# Trueskill ladder
 	ts_ladder_tmp = {k: {'cse': v.last_rating(TRUESKILL_MODEL).mu - 3*v.last_rating(TRUESKILL_MODEL).sigma, 
