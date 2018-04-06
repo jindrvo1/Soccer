@@ -38,10 +38,10 @@ s.eval_match(['Marek', 'Filip', 'Vojta2'], ['Krystof', 'Vdolek', 'Marta'], 10, 8
 s.eval_match(['Krystof', 'Vojta1', 'Vojta2'], ['Vanan', 'Filip', 'Skleny'], 2, 10)
 s.eval_match(['Skleny', 'Vojta1', 'Vojta2'], ['Vanan', 'Filip', 'Krystof'], 7, 10)
 
-s.export_games('Games.csv')
-s.export_results('Results.txt')
-s.export_ratings('Ratings.csv')
+s.export_games('Results/Orlovna_Games.csv')
+s.export_results('Results/Orlovna_Results.txt')
+s.export_ratings('Results/Orlovna_Ratings.csv')
 
-s.print_streaks()
+#s.print_streaks()
 
-s.print_predictions()
+#s.print_predictions()
