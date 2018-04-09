@@ -243,6 +243,12 @@ def longest_winning_streak():
 
 	return (p_max, len_max)
 
+def reset():
+	global p, m, matches
+	p = {}
+	m = 0
+	matches = []
+
 # Chance of a player winning a game with both teams random
 def predictions(player=None):
 	all_players = list(p.keys())
