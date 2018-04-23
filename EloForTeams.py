@@ -30,7 +30,7 @@ class EloForTeams(object):
         r_t2_new = r_t2 + self.K_FACTOR*(s_t2-e_t2)
 
         t1_new = [r + (r_t1_new-r_t1)*((r_t1_new - (2*s_t1-1)*(r - r_t1))/r_t1_new) for r in t1]
-        t2_new = [r + (r_t1_new-r_t1)*((r_t2_new - (2*s_t2-1)*(r - r_t2))/r_t2_new) for r in t1]
+        t2_new = [r + (r_t1_new-r_t1)*((r_t2_new - (2*s_t2-1)*(r - r_t2))/r_t2_new) for r in t2]
 
         return (t1_new, t2_new)
 
