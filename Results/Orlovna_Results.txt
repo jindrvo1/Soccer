@@ -1,20 +1,20 @@
 -----------------------------------
 ----------- ELO ladder ------------
 -----------------------------------
-Vojta2: 1297.65
-Skleny: 1252.63
-Michal: 1244.31
-Vanan: 1240.8
-Filip: 1233.19
-Roman: 1229.96
-Panek: 1217.35
--_-: 1201.19
-Klizka: 1184.37
-Marta: 1175.81
-Marek: 1143.22
-Krystof: 1142.12
-Vdolek: 1123.12
-Vojta1: 1114.27
+Vojta2: 1297.65 (31 played)
+Skleny: 1252.63 (5 played)
+Michal: 1244.31 (7 played)
+Vanan: 1240.8 (23 played)
+Filip: 1233.19 (20 played)
+Roman: 1229.96 (11 played)
+Panek: 1217.35 (5 played)
+-_-: 1201.19 (2 played)
+Klizka: 1184.37 (3 played)
+Marta: 1175.81 (21 played)
+Marek: 1143.22 (8 played)
+Krystof: 1142.12 (25 played)
+Vdolek: 1123.12 (9 played)
+Vojta1: 1114.27 (16 played)
 -------------------------------------
 --------- Trueskill ladder ----------
 -------------------------------------
@@ -36,17 +36,17 @@ Vdolek: -3.08 (μ = 14.14, σ = 5.74)
 --- Maximum-likelihood estimation ---
 -------------------------------------
 Skleny: 0.999
--_-: 0.3893445110788668
-Michal: 0.37489614402042964
-Vojta2: 0.2608930751539552
-Vanan: 0.11771502922407141
-Panek: 0.051260187667658684
-Vojta1: 0.001
-Vdolek: 0.001
-Roman: 0.001
-Marek: 0.001
-Klizka: 0.001
+-_-: 0.3893662233141965
+Michal: 0.374919377967804
+Vojta2: 0.26089238250195557
+Vanan: 0.11771419883779598
+Panek: 0.05125158392899815
 Filip: 0.001
+Roman: 0.001
+Klizka: 0.001
+Marek: 0.001
 Marta: 0.001
+Vdolek: 0.001
 Krystof: 0.001
+Vojta1: 0.001
 
