@@ -45,6 +45,9 @@ s.eval_match(['Vojta2', 'Krystof', 'Filip'], ['Skleny', 'Roman', 'Michal'], 2, 1
 s.eval_match(['Vojta2', 'Krystof', 'Michal'], ['Skleny', 'Roman', 'Filip'], 1, 10)
 s.eval_match(['Vojta2', 'Krystof', 'Roman'], ['Skleny', 'Michal', 'Filip'], 4, 10)
 
+s.eval_match(['Vojta1', 'Vanan', 'Marek'], ['Marta', 'Krystof', 'David'], 8, 10)
+s.eval_match(['David', 'Vanan', 'Marek'], ['Marta', 'Krystof', 'Vojta1'], 10, 5)
+
 s.export_games('Results/Orlovna_Games.csv')
 s.export_results('Results/Orlovna_Results.txt')
 s.export_ratings('Results/Orlovna_Ratings.csv')
