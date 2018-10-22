@@ -306,7 +306,7 @@ def print_ladders():
 	print("--------- Trueskill ladder ----------")
 	print("-------------------------------------")
 	for name, rating in ts_ladder.items():
-			print("{}: {} ({} = {}, {} = {})".format(name, round(rating['cse'], 2), u'\u03BC', round(rating['mu'], 2), u'\u03C3', round(rating['sigma'], 2)))
+			print("{}: {} ({} = {}, {} = {})".format(name, round(rating['cse'], 2), u'mu', round(rating['mu'], 2), u'sigma', round(rating['sigma'], 2)))
 
 	# MLE ladder
 	mle_ladder_tmp = mle()
