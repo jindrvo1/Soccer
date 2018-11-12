@@ -32,3 +32,5 @@ Season,Session,Player1_1,Player1_2,Player1_3,Player2_1,Player2_2,Player2_3,Score
 1,14,Vojta2,Krystof,Roman,Skleny,Michal,Filip,4,10
 2,1,Vojta1,Vanan,Marek,Marta,Krystof,David,8,10
 2,1,David,Vanan,Marek,Marta,Krystof,Vojta1,10,5
+2,2,Vanan,Marek,Michal,Krystof,Roman,Vojta1,9,11
+2,2,Krystof,Marek,Michal,Vanan,Roman,Vojta1,10,0
