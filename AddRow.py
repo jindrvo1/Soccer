@@ -1,13 +1,13 @@
 #####################################
 
-team1 = ["Vojta2", "Marta", "Roman"]
-team2 = ["Filip", "David", "Vanan"]
+team1 = ["Marek", "Krystof", "Roman"]
+team2 = ["Marta", "Vojta2", "Krystof"]
 
-score1 = 10
-score2 = 1
+score1 = 8
+score2 = 10
 
 season = 2
-session = 5
+session = 6
 
 #####################################
 
