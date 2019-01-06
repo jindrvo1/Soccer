@@ -1,31 +1,31 @@
 -----------------------------------
 ----------- ELO ladder ------------
 -----------------------------------
-Vojta2: 1384.3 (38 played)
+Vojta2: 1376.12 (40 played)
 Skleny: 1252.63 (5 played)
-Roman: 1233.62 (22 played)
-Filip: 1231.73 (24 played)
-Marta: 1225.47 (30 played)
-Krystof: 1220.33 (34 played)
+Krystof: 1251.54 (36 played)
+Filip: 1236.79 (26 played)
+Marta: 1230.68 (32 played)
+Roman: 1229.08 (24 played)
 Panek: 1217.35 (5 played)
 Michal: 1209.74 (11 played)
 -_-: 1201.19 (2 played)
 David: 1199.71 (4 played)
 Klizka: 1184.37 (3 played)
-Vanan: 1167.37 (36 played)
+Vanan: 1138.61 (38 played)
 Vdolek: 1123.12 (9 played)
 Marek: 1109.53 (17 played)
 Vojta1: 1039.53 (24 played)
 -------------------------------------
 --------- Trueskill ladder ----------
 -------------------------------------
-Vojta2: 24.32 (mu = 34.05, sigma = 3.24)
+Vojta2: 24.04 (mu = 33.41, sigma = 3.12)
+Krystof: 19.06 (mu = 28.64, sigma = 3.19)
 Skleny: 17.63 (mu = 34.81, sigma = 5.72)
-Krystof: 17.19 (mu = 27.16, sigma = 3.32)
-Vanan: 16.96 (mu = 26.77, sigma = 3.27)
-Marta: 16.32 (mu = 27.09, sigma = 3.59)
-Roman: 16.19 (mu = 27.62, sigma = 3.81)
-Filip: 15.35 (mu = 26.59, sigma = 3.75)
+Marta: 17.58 (mu = 27.87, sigma = 3.43)
+Filip: 16.74 (mu = 27.43, sigma = 3.56)
+Roman: 15.91 (mu = 26.75, sigma = 3.62)
+Vanan: 15.88 (mu = 25.33, sigma = 3.15)
 Michal: 12.67 (mu = 26.86, sigma = 4.73)
 Panek: 8.76 (mu = 28.67, sigma = 6.63)
 David: 5.55 (mu = 24.27, sigma = 6.24)
@@ -38,18 +38,18 @@ Vdolek: -3.08 (mu = 14.14, sigma = 5.74)
 --- Maximum-likelihood estimation ---
 -------------------------------------
 Skleny: 0.999
-Vojta2: 0.32121488603713777
--_-: 0.2391720872505066
-Panek: 0.21734167811797325
-David: 0.12138773450935528
-Filip: 0.09128804938094541
-Marta: 0.04877018405950421
-Krystof: 0.038143918679802505
+Vojta2: 0.29982442515319363
+Panek: 0.21036432621848805
+-_-: 0.20950973888890653
+David: 0.12276049122046172
+Filip: 0.09147251785434779
+Marta: 0.04891443251107974
+Krystof: 0.046391276876759986
 Michal: 0.001
 Roman: 0.001
 Klizka: 0.001
 Marek: 0.001
 Vanan: 0.001
+Vdolek: 0.001
 Vojta1: 0.001
-Vdolek: 0.000999999999999987
 
