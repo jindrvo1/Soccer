@@ -45,3 +45,5 @@ Season,Session,Player1_1,Player1_2,Player1_3,Player2_1,Player2_2,Player2_3,Score
 2,6,Marek,Vanan,Roman,Marta,Vojta2,Krystof,8,10
 2,7,Vojta2,Krystof,Roman,Marta,Vanan,Filip,10,8
 2,7,Vojta2,Vanan,Roman,Marta,Krystof,Filip,9,11
+2,8,Vojta2,Vojta1,Michal,Marta,Krystof,Vanan,5,10
+2,8,Vanan,Vojta1,Michal,Marta,Krystof,Vojta2,5,10
