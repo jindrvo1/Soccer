@@ -3,48 +3,51 @@
 -----------------------------------
 Vojta2: 1366.24 (42 played)
 Krystof: 1276.09 (38 played)
-Marta: 1255.65 (34 played)
+Marta: 1253.42 (36 played)
 Skleny: 1252.63 (5 played)
 Filip: 1236.79 (26 played)
+Gibon: 1231.74 (2 played)
 Roman: 1229.08 (24 played)
 Panek: 1217.35 (5 played)
 -_-: 1201.19 (2 played)
-David: 1199.71 (4 played)
+Michal: 1184.39 (15 played)
 Klizka: 1184.37 (3 played)
-Michal: 1184.19 (13 played)
-Vanan: 1146.43 (40 played)
+David: 1167.04 (6 played)
+Vanan: 1147.66 (42 played)
 Vdolek: 1123.12 (9 played)
-Marek: 1109.53 (17 played)
+Marek: 1111.28 (19 played)
 Vojta1: 1017.62 (26 played)
 -------------------------------------
 --------- Trueskill ladder ----------
 -------------------------------------
 Vojta2: 23.87 (mu = 33.08, sigma = 3.07)
 Krystof: 19.73 (mu = 29.12, sigma = 3.13)
-Marta: 18.36 (mu = 28.43, sigma = 3.35)
+Marta: 18.81 (mu = 28.61, sigma = 3.27)
 Skleny: 17.63 (mu = 34.81, sigma = 5.72)
 Filip: 16.74 (mu = 27.43, sigma = 3.56)
-Vanan: 16.4 (mu = 25.67, sigma = 3.09)
+Vanan: 16.44 (mu = 25.51, sigma = 3.02)
 Roman: 15.91 (mu = 26.75, sigma = 3.62)
-Michal: 12.21 (mu = 25.8, sigma = 4.53)
+Michal: 12.54 (mu = 25.49, sigma = 4.32)
+Gibon: 9.95 (mu = 31.16, sigma = 7.07)
 Panek: 8.76 (mu = 28.67, sigma = 6.63)
-David: 5.55 (mu = 24.27, sigma = 6.24)
-Marek: 5.47 (mu = 18.64, sigma = 4.39)
+Marek: 6.35 (mu = 18.94, sigma = 4.2)
 -_-: 3.83 (mu = 26.3, sigma = 7.49)
+David: 3.6 (mu = 20.67, sigma = 5.69)
 Vojta1: 2.77 (mu = 13.95, sigma = 3.73)
 Klizka: 0.81 (mu = 22.64, sigma = 7.28)
 Vdolek: -3.08 (mu = 14.14, sigma = 5.74)
 -------------------------------------
 --- Maximum-likelihood estimation ---
 -------------------------------------
+Gibon: 0.999
 Skleny: 0.999
-Vojta2: 0.2626640917437072
-Panek: 0.19858495783122695
--_-: 0.1455956632132652
-David: 0.12739199845396393
-Filip: 0.07827383956146322
-Krystof: 0.06481893955533245
-Marta: 0.05685825906014177
+Vojta2: 0.21622219180933824
+Panek: 0.16246121933577354
+-_-: 0.12135049539063586
+David: 0.08016889758812858
+Filip: 0.06204143615947658
+Krystof: 0.05595463489892162
+Marta: 0.04307243414812731
 Michal: 0.001
 Roman: 0.001
 Klizka: 0.001
