@@ -51,3 +51,6 @@ Season,Session,Player1_1,Player1_2,Player1_3,Player2_1,Player2_2,Player2_3,Score
 2,9,Gibon,Marta,Marek,Vanan,David,Michal,8,2
 2,10,Gibon,David,Vanan,Marta,Marek,Michal,10,8
 2,10,Gibon,Marek,Vanan,Marta,David,Michal,13,11
+2,11,Michal,Marek,Vanan,Fida,David,Gibon,4,10
+2,11,Fida,Gibon,Vanan,Michal,David,Marek,10,1
+2,11,Fida,Michal,Vanan,Gibon,David,Marek,5,10

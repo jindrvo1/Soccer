@@ -2,37 +2,39 @@
 ----------- ELO ladder ------------
 -----------------------------------
 Vojta2: 1366.24 (42 played)
+Gibon: 1302.13 (7 played)
 Krystof: 1276.09 (38 played)
-Gibon: 1263.22 (4 played)
 Skleny: 1252.63 (5 played)
 Filip: 1236.79 (26 played)
 Roman: 1229.08 (24 played)
 Marta: 1218.58 (38 played)
 Panek: 1217.35 (5 played)
+Fida: 1209.35 (3 played)
 -_-: 1201.19 (2 played)
 Klizka: 1184.37 (3 played)
-Vanan: 1181.46 (44 played)
-David: 1166.23 (8 played)
-Michal: 1151.5 (17 played)
+David: 1183.08 (11 played)
+Vanan: 1164.93 (47 played)
 Vdolek: 1123.12 (9 played)
-Marek: 1114.51 (21 played)
+Michal: 1110.73 (20 played)
+Marek: 1106.71 (24 played)
 Vojta1: 1017.62 (26 played)
 -------------------------------------
 --------- Trueskill ladder ----------
 -------------------------------------
 Vojta2: 23.87 (mu = 33.08, sigma = 3.07)
+Gibon: 21.69 (mu = 38.68, sigma = 5.66)
 Krystof: 19.73 (mu = 29.12, sigma = 3.13)
 Marta: 18.09 (mu = 27.64, sigma = 3.18)
 Skleny: 17.63 (mu = 34.81, sigma = 5.72)
-Vanan: 17.48 (mu = 26.35, sigma = 2.96)
-Gibon: 16.81 (mu = 35.49, sigma = 6.23)
+Vanan: 17.05 (mu = 25.73, sigma = 2.9)
 Filip: 16.74 (mu = 27.43, sigma = 3.56)
 Roman: 15.91 (mu = 26.75, sigma = 3.62)
-Michal: 11.45 (mu = 23.8, sigma = 4.12)
+Michal: 10.51 (mu = 22.36, sigma = 3.95)
 Panek: 8.76 (mu = 28.67, sigma = 6.63)
-Marek: 6.96 (mu = 19.0, sigma = 4.01)
-David: 4.9 (mu = 20.62, sigma = 5.24)
+David: 7.79 (mu = 22.49, sigma = 4.9)
+Marek: 7.7 (mu = 19.27, sigma = 3.86)
 -_-: 3.83 (mu = 26.3, sigma = 7.49)
+Fida: 3.08 (mu = 24.23, sigma = 7.05)
 Vojta1: 2.77 (mu = 13.95, sigma = 3.73)
 Klizka: 0.81 (mu = 22.64, sigma = 7.28)
 Vdolek: -3.08 (mu = 14.14, sigma = 5.74)
@@ -40,14 +42,15 @@ Vdolek: -3.08 (mu = 14.14, sigma = 5.74)
 --- Maximum-likelihood estimation ---
 -------------------------------------
 Gibon: 0.999
-Skleny: 0.9989125295949557
-Vojta2: 0.19323506982908606
-Panek: 0.1444115376615434
--_-: 0.1097577211279563
-David: 0.06596417577591207
-Filip: 0.05415936385724319
-Krystof: 0.051979439505064916
-Marta: 0.03548660740692211
+Skleny: 0.9027639101204181
+Vojta2: 0.17450216915436903
+Panek: 0.1303431977740302
+-_-: 0.09890534025670893
+David: 0.05618500797369039
+Filip: 0.04853642540068406
+Krystof: 0.0475473281922611
+Marta: 0.031891361428041914
+Fida: 0.001
 Michal: 0.001
 Roman: 0.001
 Klizka: 0.001
