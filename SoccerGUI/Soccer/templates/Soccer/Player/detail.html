@@ -1,0 +1,57 @@
+{% extends 'Soccer/base.html' %}
+{% load soccer_extras %}
+
+{% block content %}
+<h1 class="text-center">{{ player }}</h1>
+<table class="table">
+    <tr>
+        <td class="bold">Elo:</td>
+        <td>{{ ratings | get:0 | get_last | stringformat:".2f" }}</td>
+    </tr>
+    <tr>
+        <td class="bold">TrueSkill:</td>
+        <td>
+            {{ ratings | get:1 | get:'cse' | get_last | stringformat:".2f" }}
+            (&mu; = {{ ratings | get:1 | get:'mu' | get_last | stringformat:".2f" }}, &sigma; = {{ ratings | get:1 | get:'sigma' | get_last | stringformat:".2f" }})
+        </td>
+    </tr>
+    <tr>
+        <td class="bold">Odehráno:</td>
+        <td>{{ games | get:'total' }}</td>
+    </tr>
+    <tr>
+        <td class="bold">Výhry:</td>
+        <td>{{ games | get:'won' }}</td>
+    </tr>
+    <tr>
+        <td class="bold">Prohry:</td>
+        <td>{{ games | get:'lost' }}</td>
+    </tr>
+    <tr>
+        <td class="bold">Remízy:</td>
+        <td>Zbytek, vole.</td>
+    </tr>
+    <tr>
+        <td class="bold">Win/loss ratio:</td>
+        <td>{% calc_winratio games|get:'total' games|get:'won' as winratio%} {{ winratio | stringformat:".2f" }} %</td>
+    </tr>
+    <tr>
+        <td class="bold">Aktuální winning streak</td>
+        <td>{{ w_streak }}</td>
+    </tr>
+    <tr>
+        <td class="bold">Aktuální losing streak</td>
+        <td>{{ l_streak }}</td>
+    </tr>
+    <tr>
+            <td class="bold">Nejdelší winning streak</td>
+            <td>{{ lw_streak }}</td>
+        </tr>
+        <tr>
+            <td class="bold">Nejdelší losing streak</td>
+            <td>{{ ll_streak }}</td>
+        </tr>
+</table>
+{{ rating_development | safe }}
+{{ trueskill_development | safe }}
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'Soccer/base.html' %}
+{% load soccer_extras %}
+
+{% block content %}
+<table class="table">
+    <tr>
+        <th>Jméno</th>
+        <th>Elo</th>
+        <th>TS</th>
+        <th>Odehráno</th>
+        <th>Win/loss ratio</th>
+        <th>Nejdelší streak</th>
+    </tr>
+    {% for player in players %}
+    <tr>
+        <td><a href="{% url 'player-detail' player.name %}">{{ player }}</a></td>
+        <td>{{ elo | get:player.name | stringformat:".2f" }}</td>
+        <td>
+            {{ ts | get:player.name | get:'cse' | stringformat:".2f" }} 
+            (&mu; = {{ ts | get:player.name | get:'mu' | stringformat:".2f" }}, &sigma;	= {{ ts | get:player.name | get:'sigma' | stringformat:".2f" }})
+        </td>
+        <td>{{ games | get:player.name | get:'total' }}</td>
+        <td>{% calc_winratio games|get:player.name|get:'total' games|get:player.name|get:'won' as winratio%}{{ winratio | stringformat:".2f" | wlratiocolor }}</td>
+        <td>{% higher_streak streaks|get:player.name %}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

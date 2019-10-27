@@ -1,0 +1,27 @@
+td.table-right, th.table-right  {
+    text-align: right;
+}
+
+td.table-left, th.table-left  {
+    text-align: left;
+}
+
+td.table-middle, th.table-middle, .text-center {
+    text-align: center;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: green;
+}
+
+.bold {
+    font-weight: 700;
+}
+
+tr.no-border-top > td {
+    border-top: 0;
+}

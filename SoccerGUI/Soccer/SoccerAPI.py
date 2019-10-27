@@ -1,0 +1,480 @@
+from .EloForTeams import EloForTeams
+from collections import OrderedDict
+import itertools
+import trueskill as ts
+import csv
+import sys
+from math import ceil, log
+from scipy.optimize import minimize
+
+elo = EloForTeams()
+p = {}
+m = 0
+matches = []
+
+ELO_MODEL = "elo"
+TRUESKILL_MODEL = "trueskill"
+ELO_DEFAULT_RATING = 1200
+
+class Player(object):
+	def __init__(self, name, elo = ELO_DEFAULT_RATING, trueskill = ts.Rating()):
+		self.name = name
+		self.ratings = {ELO_MODEL: {0: elo}, TRUESKILL_MODEL: {0: trueskill}}
+		self.games = {'won': 0, 'lost': 0, 'total': 0, 'goals': 0}
+
+	def last_rating(self, model):
+		return self.ratings[model][max(self.ratings[model])]
+
+	def add_rating(self, model, rating, match):
+		self.ratings[model][match] = rating
+
+	def add_game(self, score, goals):
+		if score == 1:
+			self.games['won'] += 1
+		elif score == 0:
+			self.games['lost'] +=1
+
+		self.games['goals'] += goals
+
+		self.games['total'] += 1
+
+def eval_match(team1, team2, score1, score2):
+	# Update players in dictionary
+	for player in team1:
+		if player not in p:
+			p[player] = Player(player)
+
+	for player in team2:
+		if player not in p:
+			p[player] = Player(player)
+
+	global m
+	m += 1
+
+	# Update elos
+	s = 0.5
+	if score1 > score2:
+		s = 1
+	elif score1 < score2:
+		s = 0
+
+	global matches
+	matches.append((team1, team2, s))
+
+	# game counter
+	for player in team1:
+		p[player].add_game(s, score1)
+	for player in team2:
+		p[player].add_game(1-s, score2)
+
+	t1 = [p[x].last_rating(ELO_MODEL) for x in team1]
+	t2 = [p[x].last_rating(ELO_MODEL) for x in team2]
+
+	t1_new, t2_new = elo.rate_match(t1, t2, s, 1-s)
+
+	for player in team1:
+		p[player].add_rating(ELO_MODEL, t1_new.pop(0), m)
+
+	for player in team2:
+		p[player].add_rating(ELO_MODEL, t2_new.pop(0), m)
+
+	# Update trueskills
+	ranks = [0.5, 0.5]
+	if score1 > score2:
+		ranks = [0, 1]
+	elif score1 < score2:
+		ranks = [1, 0]
+ 
+	t1 = [p[x].last_rating(TRUESKILL_MODEL) for x in team1]
+	t2 = [p[x].last_rating(TRUESKILL_MODEL) for x in team2]
+
+	t1_new, t2_new = ts.rate([t1, t2], ranks=ranks)
+
+	t1_new = list(t1_new)
+	t2_new = list(t2_new)
+
+	for player in team1:
+		p[player].add_rating(TRUESKILL_MODEL, t1_new.pop(0), m)
+
+	for player in team2:
+		p[player].add_rating(TRUESKILL_MODEL, t2_new.pop(0), m)
+
+def suggest_match(players = p, team_size = 3):
+	teams = itertools.combinations(players, team_size)
+
+	for player in players:
+		if player not in p:
+			p[player] = Player(player)
+
+	elo_pred = []
+	ts_pred = []
+
+	for team in teams:
+		t1_n = list(team)
+		t2_n_comb = [x for x in players if x not in team]
+
+		for t2_n in itertools.combinations(t2_n_comb, team_size):
+			t2_n = list(t2_n)
+			t1_elo = [p[x].last_rating(ELO_MODEL) for x in team]
+			t2_elo = [p[x].last_rating(ELO_MODEL) for x in players if x not in team]
+
+			t1_ts = [p[x].last_rating(TRUESKILL_MODEL) for x in team]
+			t2_ts = [p[x].last_rating(TRUESKILL_MODEL) for x in players if x not in team]
+
+			t1_p, t2_p = elo.predict_winner(t1_elo, t2_elo)
+			elo_pred.append((abs(t1_p - t2_p), t1_n, t2_n))
+
+			ts_pred.append((ts.quality([t1_ts, t2_ts]), t1_n, t2_n))
+
+	return (min(elo_pred), max(ts_pred))
+
+def match_quality(team1, team2):
+	t1_elo, t2_elo, t1_ts, t2_ts = [], [], [], []
+	for player in team1:
+		if player not in p:
+			t1_elo.append(ELO_DEFAULT_RATING)
+			t1_ts.append(Rating())
+		else:
+			t1_elo.append(p[player].last_rating(ELO_MODEL))
+			t1_ts.append(p[player].last_rating(TRUESKILL_MODEL))
+
+	for player in team2:
+		if player not in p:
+			t2_elo.append(ELO_DEFAULT_RATING)
+			t2_ts.append(Rating())
+		else:
+			t2_elo.append(p[player].last_rating(ELO_MODEL))
+			t2_ts.append(p[player].last_rating(TRUESKILL_MODEL))
+
+	elo_pred = elo.predict_winner(t1_elo, t2_elo)
+	elo_quality = 1-abs(elo_pred[0]-elo_pred[1])
+	ts_quality = ts.quality([t1_ts, t2_ts])
+
+	return (elo_quality, ts_quality)
+
+# function to minimize in the maximum-likelihood estimation
+def log_likelihood(scores, matches):
+	ll = 0
+	C = 0.01
+
+	for match in matches:
+		numerator = sum([scores[x] if match[0][x] == 1 else 0 for x in range(len(scores))])
+		denominator = sum([scores[x] if (match[0][x] == 1 or match[1][x] == 1) else 0 for x in range(len(scores))])
+		ll += match[2]*log(numerator/denominator) + (1-match[2])*log(1-numerator/denominator) + C*(numerator/denominator)**2
+
+	ll /= -len(matches)
+
+	return ll
+
+def mle():
+	m = []
+
+	for match in matches:
+		t1 = [1 if player in match[0] else 0 for player in p.keys()]
+		t2 = [1 if player in match[1] else 0 for player in p.keys()]
+		m.append((t1, t2, match[2]))
+
+	init = [0.5 for player in p.keys()]
+	bounds = [(0.001, 0.999) for player in p.keys()]
+
+	res = minimize(log_likelihood, init, args=(m,), bounds=bounds)
+
+	res_list = list(res.x)
+	ratings = {}
+	for id, player in p.items():
+		ratings[id] = res_list.pop(0)
+	
+	return ratings
+
+def get_player(player):
+	if player in p:
+		return (p[player].ratings[ELO_MODEL], p[player].ratings[TRUESKILL_MODEL])
+
+def print_streaks():
+	lws_p, lws_l = longest_winning_streak()
+	lls_p, lls_l = longest_losing_streak()
+
+	if (len(lws_p) > 1):
+		print("Longest winning streak are currently holding {} with {} won games in a row!".format(''.join(x+' and ' if i != len(lws_p)-1 else x for i, x in enumerate(lws_l)), lws_l))
+	else:
+		print("Longest winning streak is currently holding {} with {} won games in a row!".format(''.join(lws_p), lws_l))
+
+	if len(lls_p) > 1:
+		print("Longest losing streak are currently holding {} with {} lost games in a row! Suckers!".format(''.join(x+' and ' if i != len(lls_p)-1 else x for i, x in enumerate(lls_p)), lls_l))
+	else:
+		print("Longest losing streak is currently holding {} with {} lost games in a row! Sucker!".format(''.join(lls_p), lls_l))
+	print()
+
+def longest_losing_streak():
+	len_max = 0
+	p_max = []
+	for name, player in p.items():
+		cnt = 0
+		ratings = list(player.ratings[ELO_MODEL].values())[::-1]
+		for i, r in enumerate(ratings):
+			if i+1 >= len(ratings):
+				break
+			if ratings[i] < ratings[i+1]:
+				cnt += 1
+			else:
+				break
+		if cnt >= len_max:
+			if cnt > len_max:
+				p_max = []
+			len_max = cnt
+			p_max.append(name)
+
+	return (p_max, len_max)
+
+def longest_winning_streak():
+	len_max = 0
+	p_max = []
+	for name, player in p.items():
+		cnt = 0
+		ratings = list(player.ratings[ELO_MODEL].values())[::-1]
+		for i, r in enumerate(ratings):
+			if i+1 >= len(ratings):
+				break
+			if ratings[i] > ratings[i+1]:
+				cnt += 1
+			else:
+				break
+		if cnt >= len_max:
+			if cnt > len_max:
+				p_max = []
+			len_max = cnt
+			p_max.append(name)
+
+	return (p_max, len_max)
+
+def winning_streak(player):
+	cnt = 0
+	ratings = list(p[player].ratings[ELO_MODEL].values())[::-1]
+	for i, r in enumerate(ratings):
+		if i+1 >= len(ratings):
+			break
+		if ratings[i] > ratings[i+1]:
+			cnt += 1
+		else:
+			break
+
+	return cnt
+
+def losing_streak(player):
+	cnt = 0
+	ratings = list(p[player].ratings[ELO_MODEL].values())[::-1]
+	for i, r in enumerate(ratings):
+		if i+1 >= len(ratings):
+			break
+		if ratings[i] < ratings[i+1]:
+			cnt += 1
+		else:
+			break
+		
+	return cnt
+
+def longest_winning_streak_player(player):
+	cnt, max = 0, 0
+	ratings = list(p[player].ratings[ELO_MODEL].values())[::-1]
+	for i, r in enumerate(ratings):
+		if i+1 >= len(ratings):
+			break
+		if ratings[i] > ratings[i+1]:
+			cnt += 1
+			if cnt > max:
+				max = cnt
+		else:
+			cnt = 0
+
+	return max
+
+def longest_losing_streak_player(player):
+	cnt, max = 0, 0
+	ratings = list(p[player].ratings[ELO_MODEL].values())[::-1]
+	for i, r in enumerate(ratings):
+		if i+1 >= len(ratings):
+			break
+		if ratings[i] < ratings[i+1]:
+			cnt += 1
+			if cnt > max:
+				max = cnt
+		else:
+			cnt = 0
+
+	return max
+
+def longest_winning_streak_players():
+	p_max = {name: longest_winning_streak_player(name) for name in p}
+
+	return p_max
+
+def longest_losing_streak_players():
+	p_max = {name: longest_losing_streak_player(name) for name in p}
+
+	return p_max
+
+def reset():
+	global p, m, matches
+	p = {}
+	m = 0
+	matches = []
+
+# Chance of a player winning a game with both teams random
+def predictions(player=None):
+	all_players = list(p.keys())
+	players = [player] if player is not None else all_players
+
+	predictions = {}
+	for player in players:
+		opposing_all = list(all_players)
+		opposing_all.remove(player)
+		teams = itertools.combinations(opposing_all, 2)
+		predictions_player = []
+		for team in teams:
+			team1 = list(team)
+			opposing = list(opposing_all)
+			for pl in team1:
+				opposing.remove(pl)
+			team1.append(player)
+
+			team2_all = itertools.combinations(opposing, 3)
+			for team2 in team2_all:
+				p1,p2 = elo.predict_winner([p[x].last_rating(ELO_MODEL) for x in team1], [p[x].last_rating(ELO_MODEL) for x in list(team2)])
+				predictions_player.append(p1)
+		predictions[player] = sum(predictions_player)/len(predictions_player)
+
+	return predictions
+
+def print_predictions(player=None):
+	ret = predictions(player)
+	preds = OrderedDict(reversed(sorted(ret.items(), key=lambda x:x[1])))
+
+	print("Players' chance of winning a game with both teams chosen randomly:")
+	for player, prediction in preds.items():
+		print("{}: {}".format(player, prediction))
+	print()
+
+def print_ladders():
+	# Elo ladder
+	elo_ladder_tmp = {k: v.last_rating(ELO_MODEL) for (k, v) in p.items()}
+	elo_ladder = OrderedDict(reversed(sorted(elo_ladder_tmp.items(), key=lambda x:x[1])))
+
+	print("-----------------------------------")
+	print("----------- ELO ladder ------------")
+	print("-----------------------------------")
+	for name, rating in elo_ladder.items():
+			print('{}: {} ({} played)'.format(name, round(rating, 2), p[name].games['total']))
+
+	# Trueskill ladder
+	ts_ladder_tmp = {k: {'cse': v.last_rating(TRUESKILL_MODEL).mu - 3*v.last_rating(TRUESKILL_MODEL).sigma, 
+							'mu': v.last_rating(TRUESKILL_MODEL).mu, 
+							'sigma': v.last_rating(TRUESKILL_MODEL).sigma} 
+					for (k, v) in p.items()}
+	ts_ladder = OrderedDict(reversed(sorted(ts_ladder_tmp.items(), key=lambda x:x[1]['cse'])))
+
+	print("-------------------------------------")
+	print("--------- Trueskill ladder ----------")
+	print("-------------------------------------")
+	for name, rating in ts_ladder.items():
+			print("{}: {} ({} = {}, {} = {})".format(name, round(rating['cse'], 2), u'mu', round(rating['mu'], 2), u'sigma', round(rating['sigma'], 2)))
+
+	# MLE ladder
+	mle_ladder_tmp = mle()
+	mle_ladder = OrderedDict(reversed(sorted(mle_ladder_tmp.items(), key=lambda x:x[1])))
+
+	print("-------------------------------------")
+	print("--- Maximum-likelihood estimation ---")
+	print("-------------------------------------")
+	for name, rating in mle_ladder.items():
+		print("{}: {}".format(name, rating))
+
+def get_games(player = None):
+	games = {}
+
+	if player is None:
+		for player in p:
+			games[player] = p[player].games
+	else:
+		games = p[player].games
+
+	return games
+
+def export_games(file):
+	with open(file, 'w') as file:
+		fieldnames = ['player', 'total', 'won', 'lost', 'goals']
+		writer = csv.DictWriter(file, fieldnames=fieldnames)
+
+		writer.writeheader()
+
+		for name, player in p.items():
+			writer.writerow({'player': name, 'total': player.games['total'], 'won': player.games['won'], 'lost': player.games['lost'], 'goals': player.games['goals']})
+
+def export_results(file):
+	sys.stdout = open(file, 'w')
+	print_ladders()
+	print()
+	sys.stdout = sys.__stdout__
+
+def export_ratings(file):
+	with open(file, 'w') as file:
+		global m
+		
+		fieldnames = ['player']
+
+		for i in range(0, m+1):
+			fieldnames.append('elo_{}'.format(i))
+
+		for i in range(0, m+1):
+			fieldnames.append('ts_{}'.format(i))
+
+		writer = csv.DictWriter(file, fieldnames=fieldnames)
+		writer.writeheader()
+
+		for name, player in p.items():
+			row = {}
+			row['player'] = name
+
+			for i in range(0, m+1):
+				if i in player.ratings[ELO_MODEL]:
+					row['elo_{}'.format(i)] = player.ratings[ELO_MODEL][i]
+				else:
+					j = i
+					while j > 0:
+						j -= 1
+						if j in player.ratings[ELO_MODEL]:
+							row['elo_{}'.format(i)] = player.ratings[ELO_MODEL][j]
+							break
+
+			for i in range(0, m+1):
+				if i in player.ratings[TRUESKILL_MODEL]:
+					row['ts_{}'.format(i)] = player.ratings[TRUESKILL_MODEL][i].mu - 3*player.ratings[TRUESKILL_MODEL][i].sigma
+				else:
+					j = i
+					while j > 0:
+						j -= 1
+						if j in player.ratings[TRUESKILL_MODEL]:
+							row['ts_{}'.format(i)] = player.ratings[TRUESKILL_MODEL][j].mu - 3*player.ratings[TRUESKILL_MODEL][j].sigma
+							break
+
+			writer.writerow(row)
+
+def get_all_ratings():
+	# Elo ladder
+	elo_ladder_tmp = {k: v.last_rating(ELO_MODEL) for (k, v) in p.items()}
+	elo_ladder = OrderedDict(reversed(sorted(elo_ladder_tmp.items(), key=lambda x:x[1])))
+
+	# Trueskill ladder
+	ts_ladder_tmp = {k: {'cse': v.last_rating(TRUESKILL_MODEL).mu - 3*v.last_rating(TRUESKILL_MODEL).sigma, 
+							'mu': v.last_rating(TRUESKILL_MODEL).mu, 
+							'sigma': v.last_rating(TRUESKILL_MODEL).sigma} 
+					for (k, v) in p.items()}
+	ts_ladder = OrderedDict(reversed(sorted(ts_ladder_tmp.items(), key=lambda x:x[1]['cse'])))
+
+	# MLE ladder
+	mle_ladder_tmp = mle()
+	mle_ladder = OrderedDict(reversed(sorted(mle_ladder_tmp.items(), key=lambda x:x[1])))
+
+	return (elo_ladder, ts_ladder, mle_ladder)
+
+def predict(t1, t2):
+	return elo.predict_winner(t1, t2)

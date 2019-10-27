@@ -1,0 +1,52 @@
+{% extends 'Soccer/base.html' %}
+{% load soccer_extras %}
+
+{% block content %}
+<table class="table">
+    <tr>
+        <th>&nbsp;</th>
+        <th>Sezóna</th>
+        <th>Sezení</th>
+        <th class="table-left">Tým 1</th>
+        <th>&nbsp;</th>
+        <th class="table-right">Tým 2</th>
+        <th>&nbsp;</th>
+    </tr>
+    {% for match in matches %}
+    <tr>
+        <td>&nbsp;</td>
+        <td rowspan="4">{{ match.season }}</td>
+        <td rowspan="4">{{ match.session }}</td>
+        <td class="table-left">{% winlosecolor match.team1.all|join match.score1 match.score2 %}</td>
+        <td rowspan="2" class="table-middle">{% winlosecolor match.score1 match.score1 match.score2 %}:{% winlosecolor match.score2 match.score2 match.score1 %}</td>
+        <td class="table-right">{% winlosecolor match.team2.all|join match.score2 match.score1 %}</td>
+        <td rowspan="4">
+            <a href="{% url 'match-delete' match.id %}" class='confirm-delete'><i class="far fa-trash-alt"></i></a>
+        </td>
+    </tr>
+    <tr class="no-border-top">
+        <td colspan="3" class="bold">Elo:</td>
+        <td class="table-left">{{ ratings | get:match.pk | get:0 | get:'elo' | round:1 | join }}</td>
+        <td class="table-right">{{ ratings | get:match.pk | get:1 | get:'elo' | round:1 | join }}</td></td>
+    </tr>
+    <tr class="no-border-top">
+        <td colspan="3" class="bold">Průměrný Elo:</td>
+        <td class="table-left">{% mean ratings|get:match.pk|get:0|get:'elo' as mean %}{{ mean | stringformat:".1f" }}</td>
+        <td class="table-middle">{% mean2args ratings|get:match.pk|get:0|get:'elo' ratings|get:match.pk|get:1|get:'elo' as mean %}{{ mean | stringformat:".1f" }}</td>
+        <td class="table-right">{% mean ratings|get:match.pk|get:1|get:'elo' as mean %}{{ mean | stringformat:".1f" }}</td>
+    </tr>
+    <tr class="no-border-top">
+        <td colspan="3" class="bold">Predikce:</td>
+        <td class="table-left">{{ predictions | get:match.pk | get:0 | topercent:2 }}</td>
+        <td class="table-middle">{{ cpredicted | get:match.pk | binarytoyesno }}</td>
+        <td class="table-right">{{ predictions | get:match.pk | get:1 | topercent:2 }}</td>
+    </tr>
+    {% endfor %}
+    <tr>
+        <td colspan="6">&nbsp;</td>
+        <td>
+            <a href="{% url 'match-new' %}"><i class="fas fa-plus"></i></a>
+        </td>
+    </tr>
+</table>
+{% endblock %}
